@@ -7,8 +7,8 @@ import {
   Button,
   FormFeedback,
 } from 'reactstrap';
-import { useHistory } from 'react-router-dom';
 
+import Success from './Success';
 import axios from 'axios';
 
 const initialForm = {
@@ -27,12 +27,13 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const [isValid, setIsValid] = useState(false);
 
-  const history = useHistory();
+
+const [success, setSuccess] = useState(false);
 
   const emailValid = (email) =>
     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
   useEffect(() => {
-    // Validasyon kurallarını kontrol et
+  
     const newErrors = {};
 
     if (!emailValid(form.email)) {
@@ -46,7 +47,7 @@ export default function Login() {
     }
 
     setErrors(newErrors);
-    setIsValid(Object.keys(newErrors).length === 0); // Eğer hata yoksa isValid = true
+    setIsValid(Object.keys(newErrors).length === 0);
   }, [form]);
 
   const handleChange = (event) => {
@@ -66,14 +67,17 @@ export default function Login() {
         );
         if (user) {
           setForm(initialForm);
-          history.push('/main');
+            console.log("Sign in secceende");
+            setSuccess(true);
         } else {
-          history.push('/error');
+          console.error("Hata var");
         }
       });
   };
 
   return (
+    <div>
+        {success ? <Success/>:
     <Form onSubmit={handleSubmit}>
       <FormGroup>
         <Label for="exampleEmail">Email</Label>
@@ -119,6 +123,7 @@ export default function Login() {
           Sign In
         </Button>
       </FormGroup>
-    </Form>
+    </Form>}
+    </div>
   );
 }
